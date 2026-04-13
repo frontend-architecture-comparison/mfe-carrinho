@@ -7,7 +7,7 @@ module.exports = withModuleFederationPlugin({
   name: "cartoes",
 
   exposes: {
-    "./Module": "./src/app/remote-entry/remote-entry.module.ts",
+    "./Module": "./src/app/app.module.ts",
   },
 
   shared: {
