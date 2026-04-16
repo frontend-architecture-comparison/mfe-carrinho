@@ -1,30 +1,101 @@
-# MfeCartoes
+# MFE Carrinho
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.11.
+Microfrontend Angular do estudo de arquitetura (TCC), preparado para integracao via Module Federation.
 
-## Development server
+## Resumo
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Projeto: `mfe-carrinho`
+- Stack principal: Angular 15 + TypeScript
+- Builder: `ngx-build-plus`
+- Federacao: `@angular-architects/module-federation`
+- Porta de execucao local: `4201`
 
-## Code scaffolding
+## Tecnologias
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+| Tecnologia | Versao |
+|-----------|--------|
+| Angular | ^15.2.0 |
+| Angular CLI | ~15.2.11 |
+| TypeScript | ~4.9.4 |
+| RxJS | ~7.8.0 |
+| Module Federation | ^21.2.2 |
+| Karma + Jasmine | 6.4 / 4.5 |
 
-## Build
+## Scripts
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+| Script | Descricao |
+|--------|-----------|
+| `npm start` | Sobe o app em desenvolvimento (`ng serve`) |
+| `npm run build` | Gera build de producao |
+| `npm run watch` | Build continuo em modo desenvolvimento |
+| `npm test` | Executa testes unitarios |
 
-## Running unit tests
+## Como executar
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 1. Instalar dependencias
 
-## Running end-to-end tests
+```bash
+npm install
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### 2. Rodar em desenvolvimento
 
-## Further help
+```bash
+npm start
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-# mfe-carrinho
-# mfe-carrinho
-# mfe-carrinho
+Acesse: `http://localhost:4201`
+
+### 3. Build
+
+```bash
+npm run build
+```
+
+Saida: `dist/mfe-carrinho`
+
+### 4. Testes
+
+```bash
+npm test
+```
+
+## Module Federation
+
+Configuracao atual em `webpack.config.js`:
+
+- `name`: `cartoes`
+- `exposes`:
+	- `./Module` -> `./src/app/app.module.ts`
+
+Endpoint esperado do remoto em dev:
+
+`http://localhost:4201/remoteEntry.js`
+
+## Estrutura resumida
+
+```text
+mfe-carrinho/
+|-- src/
+|   |-- app/
+|   |   |-- app.module.ts
+|   |   |-- app-routing.module.ts
+|   |   |-- app.component.*
+|   |-- main.ts
+|   |-- bootstrap.ts
+|   |-- styles.scss
+|-- angular.json
+|-- webpack.config.js
+|-- webpack.prod.config.js
+|-- package.json
+`-- README.md
+```
+
+## Observacoes
+
+- O projeto esta configurado para servir em `4201` via `angular.json`.
+- O nome federado atual (`cartoes`) deve estar alinhado com o shell que consome este remoto.
+
+---
+
+Ultima atualizacao: Abril de 2026
