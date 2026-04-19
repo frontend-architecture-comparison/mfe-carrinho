@@ -10,8 +10,13 @@ import { CarrinhoState } from '../../core/services/carrinho-state/carrinho-state
 
 const routes: Routes = [
   {
+    path: ':id',
+    component: Carrinho,
+  },
+  {
     path: '',
     component: Carrinho,
+    pathMatch: 'full',
   },
 ];
 
