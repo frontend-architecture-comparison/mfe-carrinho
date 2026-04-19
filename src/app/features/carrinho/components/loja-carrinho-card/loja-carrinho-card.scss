@@ -1,0 +1,151 @@
+:host {
+	display: block;
+	font-family: "Open Sans", sans-serif;
+	color: #1f1f1f;
+
+	--bg-surface: #ffffff;
+	--stroke: #e6e6e6;
+	--stroke-light: #f0f0f0;
+	--stroke-strong: #e3e3e3;
+	--text-muted-5: #646464;
+	--text-muted-10: #3d3d3d;
+	--brand: #ee4d2d;
+	--white: #ffffff;
+}
+
+p,
+small,
+button {
+	font-family: "Open Sans", sans-serif;
+	margin: 0;
+}
+
+.store-card {
+	background: var(--bg-surface);
+	border-radius: 14px;
+	border: 1px solid var(--stroke);
+	overflow: hidden;
+}
+
+.store-items {
+	display: grid;
+}
+
+.item-row {
+	display: grid;
+	align-items: start;
+	padding: 10px 14px 14px;
+
+	&:not(:last-child) {
+		border-bottom: 1px solid var(--stroke-light);
+	}
+}
+
+.item-thumb {
+	width: 88px;
+	height: 56px;
+	border-radius: 12px;
+	border: 1px solid var(--stroke-strong);
+	object-fit: contain;
+	display: block;
+	background: var(--white);
+	padding: 2px;
+}
+
+.item-info {
+	min-width: 0;
+
+	h3 {
+		margin: 0;
+		font-size: 17px;
+		font-weight: 500;
+		line-height: 1.25;
+		word-break: break-word;
+	}
+}
+
+.item-heading {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 10px;
+}
+
+.trash-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: #666;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background-color: rgba(198, 40, 40, 0.1);
+	}
+
+	i {
+		font-size: 13px;
+		line-height: 1;
+	}
+}
+
+.values-list {
+	margin: 8px 0 10px;
+	display: grid;
+	gap: 4px;
+
+	p {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		font-size: 14px;
+		color: var(--text-muted-5);
+	}
+
+	strong {
+		font-size: 15px;
+		font-weight: 600;
+		color: var(--text-muted-10);
+	}
+}
+
+.item-bottom {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 10px;
+
+	strong {
+		color: var(--brand);
+		font-size: 44px;
+		line-height: 1;
+		font-weight: 700;
+	}
+}
+
+footer {
+	display: flex;
+	justify-content: space-between;
+}
+
+@media (max-width: 420px) {
+	.item-thumb {
+		width: 72px;
+		height: 46px;
+	}
+
+	.item-info h3 {
+		font-size: 15px;
+	}
+
+	.item-bottom strong {
+		font-size: 32px;
+	}
+}

@@ -4,7 +4,7 @@ const {
 } = require("@angular-architects/module-federation/webpack");
 
 module.exports = withModuleFederationPlugin({
-  name: "cartoes",
+  name: "carrinho",
 
   exposes: {
     "./Module": "./src/app/app.module.ts",
