@@ -1,31 +1,41 @@
-import { computed, Component, inject, signal } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { Subject, catchError, map, of, switchMap, takeUntil } from 'rxjs';
 import { Cartao } from '@core/models/cartao.model';
 import { ListaCartoes } from '@core/services/lista-cartoes/lista-cartoes';
 import { CarrinhoState } from '@core/services/carrinho-state/carrinho-state';
 import { LojaCarrinho } from './carrinho.model';
-import { LojaCarrinhoCard } from './components/loja-carrinho-card/loja-carrinho-card';
 
 @Component({
     selector: 'app-carrinho',
-    imports: [LojaCarrinhoCard],
     templateUrl: './carrinho.html',
     styleUrls: ['./carrinho.scss']
 })
-export class Carrinho {
+export class Carrinho implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly listaCartoes = inject(ListaCartoes);
   private readonly carrinhoState = inject(CarrinhoState);
+  private readonly destroy$ = new Subject<void>();
   private ultimoIdProcessado: string | null = null;
 
-  readonly loading = signal(true);
-  readonly erro = signal(false);
-  readonly cartoesSelecionados = signal<Cartao[]>([]);
+  private loadingValue = true;
+  private erroValue = false;
+  private cartoesSelecionadosValue: Cartao[] = [];
 
-  readonly lojas = computed<LojaCarrinho[]>(() => {
-    const cartoes = this.cartoesSelecionados();
+  loading(): boolean {
+    return this.loadingValue;
+  }
+
+  erro(): boolean {
+    return this.erroValue;
+  }
+
+  cartoesSelecionados(): Cartao[] {
+    return this.cartoesSelecionadosValue;
+  }
+
+  lojas(): LojaCarrinho[] {
+    const cartoes = this.cartoesSelecionadosValue;
     const itensCarrinho = this.carrinhoState.itens();
     const idsSelecionados = Object.keys(itensCarrinho);
 
@@ -35,38 +45,40 @@ export class Carrinho {
 
     return cartoes
       .filter((cartao) => idsSelecionados.includes(String(cartao.id)))
-      .map((cartao) => {
-      const quantidade = itensCarrinho[String(cartao.id)];
+      .map((cartao: Cartao) => {
+        const quantidade = itensCarrinho[String(cartao.id)];
 
-      return {
-        nome: cartao.nome,
-        itens: [
-          {
-            nome: cartao.nome,
-            imagem: cartao.img,
-            limiteTotal: cartao.limiteTotal,
-            limitePromocional: cartao.limitePromocional,
-            anuidade: cartao.anuidade,
-            quantidade: quantidade ?? 0,
-          },
-        ],
-      };
-    });
-  });
+        return {
+          nome: cartao.nome,
+          itens: [
+            {
+              nome: cartao.nome,
+              imagem: cartao.img,
+              limiteTotal: cartao.limiteTotal,
+              limitePromocional: cartao.limitePromocional,
+              anuidade: cartao.anuidade,
+              quantidade: quantidade ?? 0,
+            },
+          ],
+        };
+      });
+  }
 
-  readonly totalSelecionado = computed(() =>
-    this.lojas().reduce(
-      (total, loja) => total + loja.itens.reduce((soma, item) => soma + item.anuidade * item.quantidade * 12, 0),
+  totalSelecionado(): number {
+    return this.lojas().reduce(
+      (total: number, loja: LojaCarrinho) =>
+        total + loja.itens.reduce((soma: number, item) => soma + item.anuidade * item.quantidade * 12, 0),
       0,
-    ),
-  );
+    );
+  }
 
-  readonly itensSelecionados = computed(() =>
-    this.lojas().reduce(
-      (total, loja) => total + loja.itens.reduce((soma, item) => soma + item.quantidade, 0),
+  itensSelecionados(): number {
+    return this.lojas().reduce(
+      (total: number, loja: LojaCarrinho) =>
+        total + loja.itens.reduce((soma: number, item) => soma + item.quantidade, 0),
       0,
-    ),
-  );
+    );
+  }
 
   constructor() {
     this.route.paramMap
@@ -81,14 +93,14 @@ export class Carrinho {
           const idsSelecionados = Object.keys(this.carrinhoState.itens());
 
           if (idsSelecionados.length === 0) {
-            this.erro.set(false);
-            this.loading.set(false);
-            this.cartoesSelecionados.set([]);
+            this.erroValue = false;
+            this.loadingValue = false;
+            this.cartoesSelecionadosValue = [];
             return of([] as Cartao[]);
           }
 
-          this.loading.set(true);
-          this.erro.set(false);
+          this.loadingValue = true;
+          this.erroValue = false;
 
           return this.listaCartoes.getlistaCartoes().pipe(
             map((cartoes) =>
@@ -98,17 +110,22 @@ export class Carrinho {
             ),
             catchError((error) => {
               console.error('Erro ao carregar cartao selecionado:', error);
-              this.erro.set(true);
+              this.erroValue = true;
               return of([] as Cartao[]);
             }),
           );
         }),
-        takeUntilDestroyed(),
+        takeUntil(this.destroy$),
       )
       .subscribe((cartoes) => {
-        this.cartoesSelecionados.set(cartoes);
-        this.loading.set(false);
+        this.cartoesSelecionadosValue = cartoes;
+        this.loadingValue = false;
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   formatarMoeda(valor: number): string {
@@ -142,5 +159,9 @@ export class Carrinho {
     if (cartoes[lojaIndex]) {
       this.carrinhoState.removerItem(cartoes[lojaIndex].id);
     }
+  }
+
+  trackByNomeLoja(index: number, loja: LojaCarrinho): string {
+    return `${loja.nome}-${index}`;
   }
 }

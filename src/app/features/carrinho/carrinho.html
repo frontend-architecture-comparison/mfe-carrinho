@@ -1,26 +1,29 @@
 <main class="carrinho-page" aria-label="Carrinho de compras">
-	@if (loading()) {
-		<section class="content-tratativa-erro">
-			<p>Carregando produto selecionado...</p>
-		</section>
-	} @else if (erro()) {
-		<section class="content-tratativa-erro">
+	<section class="content-tratativa-erro" *ngIf="loading(); else carregadoTpl">
+		<p>Carregando produto selecionado...</p>
+	</section>
+
+	<ng-template #carregadoTpl>
+		<section class="content-tratativa-erro" *ngIf="erro(); else comLojasTpl">
 			<p>Não foi possível carregar o produto selecionado.</p>
 		</section>
-	} @else if (lojas().length === 0) {
-		<section class="content-tratativa-erro">
+	</ng-template>
+
+	<ng-template #comLojasTpl>
+		<section class="content-tratativa-erro" *ngIf="lojas().length === 0; else listaLojasTpl">
 			<p>Selecione um cartão para ver o carrinho correspondente.</p>
 		</section>
-	} @else {
+	</ng-template>
+
+	<ng-template #listaLojasTpl>
 		<section class="content-card-cartao" aria-label="Lojas no carrinho">
-			@for (loja of lojas(); track loja.nome; let i = $index) {
-				<app-loja-carrinho-card 
-					[loja]="loja"
-					[lojaIndex]="i"
-					(quantidadeAlterada)="onQuantidadeAlterada($event)"
-					(itemRemovido)="onItemRemovido($event)"
-				></app-loja-carrinho-card>
-			}
+			<app-loja-carrinho-card
+				*ngFor="let loja of lojas(); let i = index; trackBy: trackByNomeLoja"
+				[loja]="loja"
+				[lojaIndex]="i"
+				(quantidadeAlterada)="onQuantidadeAlterada($event)"
+				(itemRemovido)="onItemRemovido($event)"
+			></app-loja-carrinho-card>
 		</section>
 
 		<footer class="content-card-cartao-footer">
@@ -31,5 +34,5 @@
 
 			<button class="checkout-btn" type="button">Finalizar ({{ itensSelecionados() }})</button>
 		</footer>
-	}
+	</ng-template>
 </main>

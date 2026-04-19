@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-quantity-selector',
@@ -7,19 +7,19 @@ import { Component, input, output } from '@angular/core';
   styleUrls: ['./quantity-selector.scss'],
 })
 export class QuantitySelectorComponent {
-  quantity = input(1);
-  minQuantity = input(1);
+  @Input() quantity = 1;
+  @Input() minQuantity = 1;
 
-  incremented = output<number>();
-  decremented = output<number>();
+  @Output() incremented = new EventEmitter<number>();
+  @Output() decremented = new EventEmitter<number>();
 
   increment(): void {
-    this.incremented.emit(this.quantity() + 1);
+    this.incremented.emit(this.quantity + 1);
   }
 
   decrement(): void {
-    const novaQuantidade = this.quantity() - 1;
-    if (novaQuantidade >= this.minQuantity()) {
+    const novaQuantidade = this.quantity - 1;
+    if (novaQuantidade >= this.minQuantity) {
       this.decremented.emit(novaQuantidade);
     }
   }

@@ -4,12 +4,12 @@
     class="quantity-btn minus"
     aria-label="Diminuir quantidade"
     (click)="decrement()"
-    [disabled]="quantity() <= minQuantity()"
+    [disabled]="quantity <= minQuantity"
   >
     <i class="fa-solid fa-minus" aria-hidden="true"></i>
   </button>
 
-  <span class="quantity-value">{{ quantity() }}</span>
+  <span class="quantity-value">{{ quantity }}</span>
 
   <button
     type="button"

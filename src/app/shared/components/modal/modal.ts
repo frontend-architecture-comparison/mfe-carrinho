@@ -1,25 +1,27 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './modal.html',
   styleUrls: ['./modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalComponent {
-  open = input(false);
-  title = input('Modal');
-  closeOnOverlayClick = input(true);
+  @Input() open = false;
+  @Input() title = 'Modal';
+  @Input() closeOnOverlayClick = true;
 
-  closed = output<void>();
+  @Output() closed = new EventEmitter<void>();
 
   closeModal(): void {
     this.closed.emit();
   }
 
   onOverlayClick(): void {
-    if (this.closeOnOverlayClick()) {
+    if (this.closeOnOverlayClick) {
       this.closeModal();
     }
   }

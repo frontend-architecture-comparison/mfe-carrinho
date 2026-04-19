@@ -1,20 +1,22 @@
-import { Component, input, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { LojaCarrinho } from '../../carrinho.model';
-import { QuantitySelectorComponent } from '@shared/components/quantity-selector/quantity-selector';
+import { ItemCarrinho, LojaCarrinho } from '../../carrinho.model';
+import { QuantitySelectorComponent } from '../../../../shared/components/quantity-selector/quantity-selector';
 
 @Component({
     selector: 'app-loja-carrinho-card',
-    imports: [QuantitySelectorComponent],
+  standalone: true,
+  imports: [CommonModule, QuantitySelectorComponent],
     templateUrl: './loja-carrinho-card.html',
     styleUrls: ['./loja-carrinho-card.scss']
 })
 export class LojaCarrinhoCard {
-  loja = input.required<LojaCarrinho>();
-  lojaIndex = input(0);
+  @Input() loja!: LojaCarrinho;
+  @Input() lojaIndex = 0;
 
-  quantidadeAlterada = output<{ lojaIndex: number; novaQuantidade: number }>();
-  itemRemovido = output<number>();
+  @Output() quantidadeAlterada = new EventEmitter<{ lojaIndex: number; novaQuantidade: number }>();
+  @Output() itemRemovido = new EventEmitter<number>();
 
   formatarMoeda(valor: number): string {
     return new Intl.NumberFormat('pt-BR', {
@@ -27,12 +29,16 @@ export class LojaCarrinhoCard {
 
   onQuantidadeAlterada(novaQuantidade: number): void {
     this.quantidadeAlterada.emit({
-      lojaIndex: this.lojaIndex(),
+      lojaIndex: this.lojaIndex,
       novaQuantidade,
     });
   }
 
   removerItem(): void {
-    this.itemRemovido.emit(this.lojaIndex());
+    this.itemRemovido.emit(this.lojaIndex);
+  }
+
+  trackByNomeItem(index: number, item: ItemCarrinho): string {
+    return `${item.nome}-${index}`;
   }
 }

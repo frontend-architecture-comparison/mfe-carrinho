@@ -1,11 +1,11 @@
-import { Component, input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-loading',
-    imports: [],
+    standalone: true,
     template: `
     <div class="loading">
-      <p>{{ message() }}</p>
+      <p>{{ message }}</p>
     </div>
   `,
     styles: [`
@@ -34,5 +34,5 @@ import { Component, input } from '@angular/core';
   `]
 })
 export class LoadingComponent {
-  message = input('Carregando...');
+  @Input() message = 'Carregando...';
 }

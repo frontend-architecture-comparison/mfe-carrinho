@@ -1,19 +1,21 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-header',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  title = input('');
-  showBack = input(false);
-  cartQuantidade = input(0);
+  @Input() title = '';
+  @Input() showBack = false;
+  @Input() cartQuantidade = 0;
 
-  homeClicked = output<void>();
-  cartClicked = output<void>();
+  @Output() homeClicked = new EventEmitter<void>();
+  @Output() cartClicked = new EventEmitter<void>();
 
   onHomeClick(): void {
     this.homeClicked.emit();

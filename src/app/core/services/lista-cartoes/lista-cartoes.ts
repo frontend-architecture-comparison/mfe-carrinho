@@ -7,7 +7,7 @@ import { Cartao } from '../../models/cartao.model';
 })
 export class ListaCartoes {
 
-  private url_api: string = 'http://localhost:3000/cartoes';
+  private url_api: string = 'http://localhost:3002/cartoes';
   private readonly http = inject(HttpClient);
 
   getlistaCartoes() {

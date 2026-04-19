@@ -1,20 +1,14 @@
 <header>
   <div class="header-left">
-    @if (showBack()) {
-      <button class="back-link" type="button" aria-label="Voltar para home" (click)="onHomeClick()">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-      </button>
-    }
+    <button class="back-link" type="button" aria-label="Voltar para home" (click)="onHomeClick()" *ngIf="showBack">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+    </button>
 
-    @if (title()) {
-      <h1>{{ title() }}</h1>
-    }
+    <h1 *ngIf="title">{{ title }}</h1>
   </div>
 
   <button class="cart-link" type="button" aria-label="Ir para o carrinho" (click)="onCartClick()">
     <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
-    @if (cartQuantidade() > 0) {
-      <span class="cart-badge" aria-label="Itens no carrinho">{{ cartQuantidade() }}</span>
-    }
+    <span class="cart-badge" aria-label="Itens no carrinho" *ngIf="cartQuantidade > 0">{{ cartQuantidade }}</span>
   </button>
 </header>

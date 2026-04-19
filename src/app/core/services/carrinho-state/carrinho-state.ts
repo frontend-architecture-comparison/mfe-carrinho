@@ -1,32 +1,38 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Cartao } from '@core/models/cartao.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CarrinhoState {
-  readonly itens = signal<Record<string, number>>({});
-  readonly quantidade = computed(() =>
-    Object.values(this.itens()).reduce((total, quantidadeItem) => total + quantidadeItem, 0),
-  );
+  private itensValue: Record<string, number> = {};
+
+  itens(): Record<string, number> {
+    return this.itensValue;
+  }
+
+  quantidade(): number {
+    return Object.values(this.itensValue).reduce(
+      (total: number, quantidadeItem: number) => total + quantidadeItem,
+      0,
+    );
+  }
 
   adicionarItem(cartaoId: Cartao['id']): void {
     const id = String(cartaoId);
+    const itensAtuais = this.itensValue;
 
-    this.itens.update((itensAtuais) => ({
+    this.itensValue = {
       ...itensAtuais,
       [id]: (itensAtuais[id] ?? 0) + 1,
-    }));
+    };
   }
 
   removerItem(cartaoId: Cartao['id']): void {
     const id = String(cartaoId);
-
-    this.itens.update((itensAtuais) => {
-      const novoItens = { ...itensAtuais };
-      delete novoItens[id];
-      return novoItens;
-    });
+    const novoItens = { ...this.itensValue };
+    delete novoItens[id];
+    this.itensValue = novoItens;
   }
 
   atualizarQuantidade(cartaoId: Cartao['id'], quantidade: number): void {
@@ -35,10 +41,10 @@ export class CarrinhoState {
     if (quantidade <= 0) {
       this.removerItem(cartaoId);
     } else {
-      this.itens.update((itensAtuais) => ({
-        ...itensAtuais,
+      this.itensValue = {
+        ...this.itensValue,
         [id]: quantidade,
-      }));
+      };
     }
   }
 }
