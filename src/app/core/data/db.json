@@ -1,0 +1,19 @@
+{
+  "cartoes": [
+    {
+      "img": "https://passageirodeprimeira.com/wp-content/uploads/2025/08/amazon-prime-mastercard-platinum-cbcccardprime-high-230x146.png",
+      "nome": "Amazon Prime Mastercard Platinum",
+      "limiteTotal": 1000,
+      "limitePromocional": 500,
+      "anuidade": 100
+    },
+    {
+      "img": "https://publish-p128342-e1259725.adobeaemcloud.com/content/dam/banco-bradesco/bradescard/staticfiles/assets/images/cartoes/cartao_telhanorte_tumelero_elo_mais_frente.png",
+      "nome": "Telhanorte e Tumelero Elo Mais",
+      "limiteTotal": 1500,
+      "limitePromocional": 1000,
+      "anuidade": 25
+    }
+  ],
+  "carrinho": []
+}

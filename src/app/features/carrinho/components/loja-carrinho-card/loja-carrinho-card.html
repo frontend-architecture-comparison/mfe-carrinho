@@ -1,0 +1,44 @@
+<section class="store-card" aria-label="Loja no carrinho">
+	<div class="store-items">
+		<div class="item-row" *ngFor="let item of loja.itens; trackBy: trackByNomeItem">
+			<div class="item-info">
+				<header class="item-heading">
+					<img class="item-thumb" [src]="item.imagem" [alt]="item.nome" width="88" height="56" />
+					<h3>{{ item.nome }}</h3>
+					<button class="trash-btn" type="button" aria-label="Remover item do carrinho" (click)="removerItem()">
+						<i class="fa-solid fa-trash" aria-hidden="true"></i>
+					</button>
+				</header>
+
+				<article class="values-list" aria-label="Detalhes do cartão">
+					<p>
+						<span>Limite total</span>
+						<strong>{{ formatarMoeda(item.limiteTotal) }}</strong>
+					</p>
+					<p>
+						<span>Limite promocional</span>
+						<strong>{{ formatarMoeda(item.limitePromocional) }}</strong>
+					</p>
+					<p>
+						<span>Anuidade</span>
+						<strong>{{ formatarMoeda(item.anuidade) }}</strong>
+					</p>
+				</article>
+
+				<footer>
+					<div class="item-bottom">
+						<p>12x</p>
+						<strong>{{ formatarMoeda(item.anuidade) }}</strong>
+					</div>
+
+					<app-quantity-selector
+						[quantity]="item.quantidade"
+						[minQuantity]="1"
+						(incremented)="onQuantidadeAlterada($event)"
+						(decremented)="onQuantidadeAlterada($event)"
+					></app-quantity-selector>
+				</footer>
+			</div>
+		</div>
+	</div>
+</section>
